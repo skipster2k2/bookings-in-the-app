@@ -135,6 +135,85 @@ NHS eye care appointments fall into three categories, each with different integr
 
 **Hospital ophthalmology** referrals (cataracts, glaucoma, retinal conditions etc.) go through e-RS and are managed by hospital trusts. These are already covered by the Patient Care Aggregator — if a Derbyshire patient is referred from their optician to Royal Derby Hospital ophthalmology, the referral and any outpatient appointment will surface in the PCA data alongside other secondary care bookings. No additional integration is needed for this pathway.
 
+### Out of scope: children's centres, family hubs and community health services
+
+Sure Start children's centres (many now rebranded as Family Hubs) and the NHS services delivered through them represent a significant gap in the unified appointments vision. The activities fall into several categories, none of which have a patient-facing booking API:
+
+**Health visitor appointments** (the NHS element) — the mandated Healthy Child Programme reviews (antenatal, new birth, 6-8 week, 9-12 month, 2-2½ year) are delivered by health visitors employed by community NHS trusts. In Derbyshire, this is Derbyshire Community Health Services NHS Foundation Trust (DCHS). Appointments are managed internally by health visiting teams via phone, text (some areas use ChatHealth), or letter. The underlying clinical systems are typically SystmOne (TPP), EMIS Community, or specialist child health information systems like Careplus. None expose a patient-facing appointment API.
+
+**Drop-in sessions** (baby weighing clinics, breastfeeding support, stay-and-play) — overwhelmingly walk-in with no booking. Some moved to bookable slots post-COVID but managed via phone calls to the centre or the health visiting duty line, not through any digital system.
+
+**Local authority family support** — parenting courses, early help assessments, family support workers. These are council services (Derbyshire County Council / Derby City Council), not NHS, managed through local authority case management systems (Mosaic, Liquid Logic, Eclipse) with no NHS data linkage.
+
+**Referred specialist community services** — if a child is referred from a children's centre to speech and language therapy (SALT), community paediatrics, or occupational therapy, those referrals flow through NHS community trust systems. If the specialist service is hospital-based, it could appear via e-RS and the PCA. But community trust appointments (SALT, community paediatrics, health visiting) do not surface in any national patient-facing system.
+
+#### Why the PCA doesn't cover community trusts
+
+The Patient Care Aggregator's scope is explicitly limited to **acute/secondary care**. Its eligibility criteria require that a booking system represents "at least one acute NHS trust that handles outpatient appointments in England", and the March 2024 mandate was for "all non-specialist acute care settings" to integrate. The language throughout the PCA documentation is consistently "secondary care", "acute trusts", and "hospital" — community trusts are not mentioned.
+
+This means community NHS trusts fall into a gap between all three national APIs:
+
+| API | Scope | Community trusts? |
+|-----|-------|-------------------|
+| GP Connect | Primary care (GP practices) | No |
+| Patient Care Aggregator | Acute/secondary care (hospitals) | No — explicitly scoped to acute trusts |
+| BaRS | Urgent care booking between services | No — system-to-system, not patient-facing retrieval |
+
+The PCA's technical architecture (FHIR R4, deep links to patient portals, Get Appointments API standard) *could* theoretically be extended to community trusts, but this would require:
+
+1. A policy decision to broaden the PCA's scope beyond acute care
+2. Community trusts to build patient engagement portals (PEPs) and Get Appointments APIs
+3. Community trust PAS/clinical systems (SystmOne, EMIS Community, Careplus) to expose appointment data in a standardised format
+4. Assurance and onboarding of community trust suppliers through the Partner Gateway
+
+#### Strategic significance
+
+This is arguably the most important gap for the NHS App to address. Health visitor appointments, district nursing visits, community paediatric assessments, and SALT sessions are genuine NHS appointments that patients and families need to attend, but they are invisible to every national API in this prototype.
+
+The gap will become more visible as the NHS 10 Year Health Plan's emphasis on moving care into community settings takes effect. The 2024 House of Lords Integration of Primary and Community Care Committee report highlighted the challenge of integrating primary and community care, noting that fragmented digital infrastructure is a barrier to the integrated care that ICSs are expected to deliver.
+
+Possible approaches to closing this gap:
+
+- **Extend the PCA to community trusts** — leverage existing architecture, but requires community trusts to build PEPs and APIs
+- **Extend GP Connect to community health trusts** — some community services (district nursing, health visiting) are similar in character to primary care
+- **Build a new community services aggregator** — purpose-built for the different appointment patterns in community care (home visits, group sessions, drop-ins)
+- **Mandate community trust PAS vendors to expose FHIR APIs** — similar to what GP Connect did for GP system suppliers, but for community clinical systems
+
+### Out of scope (with future potential): community pharmacy
+
+Community pharmacy appointments present a mixed picture — mostly walk-in today, but with national digital standards actively being developed that could enable integration in future.
+
+#### Current landscape
+
+Community pharmacies in England use one of four NHS-assured Pharmacy First IT systems to manage consultations and claims: **PharmOutcomes** (Pinnacle Health Partnership), **Sonar** (Cegedim), **NHSPharmacy** (Positive Solutions / EMIS), and **Titan PMR** (Invatech Health). These are mandated for recording Pharmacy First consultations and submitting claims to the NHSBSA.
+
+Current booking pathways into pharmacy are:
+
+- **Walk-in** — the majority of Pharmacy First consultations require no appointment. Pharmacists can see patients without a booking.
+- **GP referral** — when a patient contacts their GP with symptoms suitable for Pharmacy First (7 common conditions including UTI, shingles, impetigo, infected insect bites, sinusitis, sore throat, earache), practice care navigators can refer the patient to a community pharmacist of their choice.
+- **NHS 111 referral** — 111 can refer patients to pharmacy via the Directory of Services.
+- **NBS vaccinations** — the National Booking Service handles COVID-19 vaccination bookings at pharmacies, with flu vaccine booking being piloted (already covered by the hypothetical NBS source in this prototype).
+- **Chain-specific online booking** — some pharmacy chains (Pharmacy+Health, Pharmacy2U, Boots) offer their own proprietary online booking for Pharmacy First, but these are not standardised.
+
+None of these pathways currently expose a patient-facing API for retrieving "my upcoming pharmacy appointments".
+
+#### Why this is different from dental and optometry
+
+Unlike routine dental and optometry (which have no national integration standards on the horizon), pharmacy has active national digital development underway:
+
+- **BaRS for pharmacy** — Community Pharmacy England and NHS England are actively working on implementing the Booking and Referral Standard for pharmacy, including Pharmacy First referrals from GP practices and NHS 111. IT suppliers will be required to meet BaRS. Once live, GP→pharmacy and 111→pharmacy referrals will flow through standardised FHIR R4 pathways.
+- **GP Connect Update Record** — already used by Pharmacy First IT systems to send consultation outcomes back to the patient's GP. This demonstrates that pharmacy systems can participate in national interoperability standards.
+- **Directory of Services (DoS)** — participating pharmacies are already listed on the DoS, making them discoverable by 111 and other referring services.
+
+#### What would be needed to surface pharmacy appointments in the NHS App
+
+1. **BaRS implementation for pharmacy to complete** — once GP→pharmacy referrals flow through BaRS, the booking data exists in a standardised format
+2. **A patient-facing retrieval mechanism** — BaRS is system-to-system; an additional layer would be needed for the NHS App to retrieve a patient's pharmacy bookings (similar to the gap noted for urgent dental)
+3. **Walk-in consultations to be retrospectively visible** — most pharmacy interactions are walk-in, so a "past consultations" view (from GP Connect Update Record notifications) might be more valuable than a "future appointments" view
+4. **Pharmacy patient portals** — pharmacies would need to build or adopt patient engagement portals, similar to the PEPs used by secondary care in the PCA
+
+The pharmacy sector is arguably closest to having the national plumbing in place for future integration, even though no patient-facing API exists today. BaRS maturity for pharmacy is the key milestone to watch.
+
 ## Notes
 
 - Mock data uses fictional patients and appointments — no real patient data
