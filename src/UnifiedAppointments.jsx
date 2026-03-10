@@ -73,7 +73,28 @@ const pcaAppointments = [
     referralStatus: "Booked", ersReference: "000876543210", hasActionableItems: false,
   },
   {
-    id: "pca-005", source: "pca", sourceDetail: "secondary-care", status: "cancelled",
+    id: "pca-005", source: "pca", sourceDetail: "e-rs", status: "booked",
+    type: "Ophthalmology Outpatient — Cataract Assessment", specialty: "Ophthalmology",
+    provider: "University Hospitals of Derby and Burton NHS FT",
+    location: "Royal Derby Hospital, Eye Centre, Uttoxeter Road, Derby, DE22 3NE",
+    start: "2026-04-14T11:15:00+01:00", end: "2026-04-14T11:45:00+01:00",
+    created: "2026-02-03T09:50:00+00:00",
+    deepLink: "https://www.nhs.uk/nhs-app/e-referrals/referral/000765432109",
+    referralStatus: "Booked", ersReference: "000765432109", hasActionableItems: true,
+    ophthalmologyNote: "Referred by community optometrist via CUES pathway following routine sight test. Right eye cataract confirmed on slit-lamp examination. Pre-assessment questionnaire available in patient portal.",
+  },
+  {
+    id: "pca-006", source: "pca", sourceDetail: "secondary-care", status: "booked",
+    type: "Ophthalmology Follow-up — Glaucoma Monitoring", specialty: "Ophthalmology",
+    provider: "Chesterfield Royal Hospital NHS FT",
+    location: "Chesterfield Royal Hospital, Eye Clinic, Calow, S44 5BL",
+    start: "2026-05-02T09:30:00+01:00", end: "2026-05-02T10:00:00+01:00",
+    created: "2025-11-15T14:20:00+00:00",
+    deepLink: "https://portal.chesterfieldroyal.nhs.uk/patient/appointments/pca-appt-006",
+    canCancel: true, canReschedule: true, hasActionableItems: false, providerSystem: "DrDoctor",
+  },
+  {
+    id: "pca-007", source: "pca", sourceDetail: "secondary-care", status: "cancelled",
     type: "Orthopaedic Outpatient Follow-up", specialty: "Trauma and Orthopaedics",
     provider: "Northern Care Alliance NHS Foundation Trust",
     location: "Rochdale Infirmary, Outpatient Department",
@@ -300,6 +321,13 @@ const AppointmentCard = ({ appt }) => {
       {/* Source-specific panels */}
       {isVax && appt.vaccine && !dead && <VaccineInfo vaccine={appt.vaccine} accessibility={appt.accessibility} />}
       {isDental && appt.dental && <DentalInfo dental={appt.dental} />}
+      {appt.ophthalmologyNote && !dead && (
+        <div style={{ backgroundColor: "#ecfdf5", borderRadius: 8, padding: "10px 14px", marginBottom: 12, border: "1px solid #6ee7b7" }}>
+          <p style={{ margin: 0, fontSize: 13, color: "#065f46" }}>
+            <strong>{"\uD83D\uDC41"} Referral note:</strong> {appt.ophthalmologyNote}
+          </p>
+        </div>
+      )}
 
       {/* Referral CTA */}
       {isReferral ? (

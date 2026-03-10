@@ -125,6 +125,16 @@ These are proprietary systems with no standardised FHIR API and no national aggr
 
 Sexual health services (e.g. the PHR system at myphr.online) deliberately operate outside the standard NHS data infrastructure. Patient data is not linked to NHS numbers or NHS records, by design, to protect confidentiality and encourage access to services. Integration would require a new consent-based data sharing model.
 
+### Out of scope: optometry and eye care bookings
+
+NHS eye care appointments fall into three categories, each with different integration implications:
+
+**Routine NHS sight tests** are booked directly with high-street opticians by phone, walk-in, or through each chain's own platform. The big chains (Specsavers, Boots Opticians, Vision Express) have proprietary online booking systems, and independent practices use commercial practice management software such as Optisoft, Optinet, I-Clarity, Opticabase, or EYEris. There is no national booking service, no FHIR API, and no NHS number linkage for booking. NHS England commissions over 13 million NHS sight tests per year, but the booking infrastructure is entirely practice-level — the same gap as routine dental.
+
+**Community Urgent Eyecare Service (CUES)** is commissioned by ICBs and delivered through local optometry practices via Primary Eyecare Services. In Derbyshire, the CUES service is available for patients registered with a Derby and Derbyshire ICB GP or Glossop GP. Patients call a participating optician, are triaged, and may be given self-care advice, booked for a virtual or face-to-face appointment, or referred onward. Some areas use a clinician-facing platform called OPERA (Optometric Electronic Referral and Assessment) to manage the referrals and link to e-RS. However, CUES and OPERA are clinician-facing — there is no patient-facing API for retrieving CUES appointments.
+
+**Hospital ophthalmology** referrals (cataracts, glaucoma, retinal conditions etc.) go through e-RS and are managed by hospital trusts. These are already covered by the Patient Care Aggregator — if a Derbyshire patient is referred from their optician to Royal Derby Hospital ophthalmology, the referral and any outpatient appointment will surface in the PCA data alongside other secondary care bookings. No additional integration is needed for this pathway.
+
 ## Notes
 
 - Mock data uses fictional patients and appointments — no real patient data
