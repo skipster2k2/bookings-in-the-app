@@ -1,12 +1,16 @@
-# NHS Unified Appointments Prototype
+# NHS Unified Appointments Prototype — Derby and Derbyshire ICB
 
-A prototype showing patient appointments from four NHS APIs — **GP Connect** (primary care, FHIR STU3), the **Patient Care Aggregator** (secondary care + e-RS, FHIR R4), the **Vaccinations National Booking Service** (hypothetical FHIR R4 API), and **BaRS urgent dental** (FHIR R4, booked via NHS 111) — in a single unified view.
+A prototype showing patient appointments from four NHS APIs in a single unified view, researched and scoped for the **NHS Derby and Derbyshire Integrated Care Board (ICB)** area. While the national APIs (GP Connect, PCA, BaRS) work the same way across England, the out-of-scope analysis, local providers, mock data, and gap assessment are specific to Derbyshire's health and care landscape.
+
+The APIs used are: **GP Connect** (primary care, FHIR STU3), the **Patient Care Aggregator** (secondary care + e-RS, FHIR R4), the **Vaccinations National Booking Service** (hypothetical FHIR R4 API), and **BaRS urgent dental** (FHIR R4, booked via NHS 111).
 
 Built with React + Vite. Uses mock data only — no real patient data.
 
+> **Derbyshire context:** Mock data references real Derbyshire providers and locations — Whitworth Medical Centre, Northern Care Alliance, Rochdale Infirmary, Royal Derby Hospital, Chesterfield Royal Hospital, Derbyshire Community Health Services NHS FT, Derbyshire Health United (NHS 111), Heywood Vaccination Centre, and Boots Pharmacy Rochdale. The out-of-scope analysis covers Derbyshire-specific services including the Derby and Derbyshire CUES pathway, DCHS health visiting, Derbyshire County Council family support, and the Derbyshire emergency dental service. Other ICB areas may have different local providers, community trust arrangements, and commissioned services — this analysis should not be assumed to apply elsewhere without local validation.
+
 > **Note on vaccination data:** The NBS does not currently expose a patient-facing FHIR API. It integrates with the NHS App via a web view using NHS login credentials. The vaccination data in this prototype uses a hypothetical API response to illustrate what a fully unified appointments view could look like. This is intended as a conversation starter with the Vaccinations Digital Services team.
 
-> **Note on dental data:** Only *urgent* dental appointments booked by NHS 111 via BaRS are represented. Routine NHS dental bookings are managed in practice-level dental software (EXACT, R4, SfD, Dentally etc.) with no national API — see "Out of scope" below.
+> **Note on dental data:** Only *urgent* dental appointments booked by NHS 111 via BaRS are represented. Routine NHS dental bookings are managed in practice-level dental software (EXACT, R4, SfD, Dentally etc.) with no national API — see "Not currently possible" below.
 
 ## What it shows
 
@@ -109,9 +113,9 @@ The mock includes BaRS-specific data:
 
 Emergency dental services are a valid BaRS provider type. The mock uses the real ODS code for Derbyshire Community Health Services NHS Foundation Trust (RTG) which runs the emergency dental service across Derby and Chesterfield.
 
-### Out of scope: routine dental bookings
+### Not currently possible: routine dental bookings (Derbyshire and national)
 
-Routine NHS dental appointments (checkups, hygiene, treatment courses) cannot be surfaced via any national API. They are managed entirely within practice-level dental practice management software (DPMS). The main systems used across England are:
+Routine NHS dental appointments (checkups, hygiene, treatment courses) cannot be surfaced via any national API. They are managed entirely within practice-level dental practice management software (DPMS). The main systems used across England (including Derbyshire) are:
 
 - **EXACT** (Software of Excellence / Henry Schein One) — market leader
 - **R4** (Henry Schein One) — large installed base in established practices
@@ -121,13 +125,13 @@ Routine NHS dental appointments (checkups, hygiene, treatment courses) cannot be
 
 These are proprietary systems with no standardised FHIR API and no national aggregation layer. Surfacing routine dental bookings would require either a new DPMS interoperability standard (similar to what GP Connect did for GP systems) or mandating that dental software vendors expose a standardised appointment API — a multi-year programme.
 
-### Out of scope: sexual health bookings
+### Not currently possible: sexual health bookings (Derbyshire and national)
 
-Sexual health services (e.g. the PHR system at myphr.online) deliberately operate outside the standard NHS data infrastructure. Patient data is not linked to NHS numbers or NHS records, by design, to protect confidentiality and encourage access to services. Integration would require a new consent-based data sharing model.
+Sexual health services (e.g. the PHR system at dchs.myphr.online used by Derbyshire Community Health Services, and similar myphr.online instances across England) deliberately operate outside the standard NHS data infrastructure. Patient data is not linked to NHS numbers or NHS records, by design, to protect confidentiality and encourage access to services. Integration would require a new consent-based data sharing model. This is a national architectural decision, not specific to Derbyshire.
 
-### Out of scope: optometry and eye care bookings
+### Not currently possible: optometry and eye care bookings (Derbyshire-specific analysis)
 
-NHS eye care appointments fall into three categories, each with different integration implications:
+NHS eye care appointments in Derbyshire fall into three categories, each with different integration implications:
 
 **Routine NHS sight tests** are booked directly with high-street opticians by phone, walk-in, or through each chain's own platform. The big chains (Specsavers, Boots Opticians, Vision Express) have proprietary online booking systems, and independent practices use commercial practice management software such as Optisoft, Optinet, I-Clarity, Opticabase, or EYEris. There is no national booking service, no FHIR API, and no NHS number linkage for booking. NHS England commissions over 13 million NHS sight tests per year, but the booking infrastructure is entirely practice-level — the same gap as routine dental.
 
@@ -135,9 +139,9 @@ NHS eye care appointments fall into three categories, each with different integr
 
 **Hospital ophthalmology** referrals (cataracts, glaucoma, retinal conditions etc.) go through e-RS and are managed by hospital trusts. These are already covered by the Patient Care Aggregator — if a Derbyshire patient is referred from their optician to Royal Derby Hospital ophthalmology, the referral and any outpatient appointment will surface in the PCA data alongside other secondary care bookings. No additional integration is needed for this pathway.
 
-### Out of scope: children's centres, family hubs and community health services
+### Not currently possible: children's centres, family hubs and community health services (Derbyshire-specific analysis, national implications)
 
-Sure Start children's centres (many now rebranded as Family Hubs) and the NHS services delivered through them represent a significant gap in the unified appointments vision. The activities fall into several categories, none of which have a patient-facing booking API:
+Sure Start children's centres in Derbyshire (many now rebranded as Family Hubs under the national Family Hubs programme) and the NHS services delivered through them represent a significant gap in the unified appointments vision. The specific providers and arrangements described below are for the Derby and Derbyshire ICB area — other ICBs will have different community trust configurations — but the underlying gap (no national API for community health appointments) is a national issue.
 
 **Health visitor appointments** (the NHS element) — the mandated Healthy Child Programme reviews (antenatal, new birth, 6-8 week, 9-12 month, 2-2½ year) are delivered by health visitors employed by community NHS trusts. In Derbyshire, this is Derbyshire Community Health Services NHS Foundation Trust (DCHS). Appointments are managed internally by health visiting teams via phone, text (some areas use ChatHealth), or letter. The underlying clinical systems are typically SystmOne (TPP), EMIS Community, or specialist child health information systems like Careplus. None expose a patient-facing appointment API.
 
@@ -179,7 +183,7 @@ Possible approaches to closing this gap:
 - **Build a new community services aggregator** — purpose-built for the different appointment patterns in community care (home visits, group sessions, drop-ins)
 - **Mandate community trust PAS vendors to expose FHIR APIs** — similar to what GP Connect did for GP system suppliers, but for community clinical systems
 
-### Out of scope (with future potential): community pharmacy
+### Not currently possible (with future potential): community pharmacy (national, with Derbyshire context)
 
 Community pharmacy appointments present a mixed picture — mostly walk-in today, but with national digital standards actively being developed that could enable integration in future.
 
@@ -223,3 +227,32 @@ The pharmacy sector is arguably closest to having the national plumbing in place
 - The BaRS urgent dental source uses a real standard but the mock assumes a patient-facing retrieval mechanism that may not exist today — BaRS is primarily a system-to-system booking standard
 - This is a demo, not production code — no auth, no error handling, no accessibility audit
 - GP Connect uses FHIR STU3; PCA, NBS (hypothetical) and BaRS use FHIR R4 — a real integration would need a normalisation layer to reconcile the two FHIR versions
+
+## Derbyshire-specific providers referenced in mock data and analysis
+
+| Provider | ODS code | Role in prototype |
+|----------|----------|-------------------|
+| Whitworth Medical Centre | — | Mock GP practice (GP Connect) |
+| Northern Care Alliance NHS FT | RXA | Mock hospital outpatient (PCA) |
+| Pennine Acute Hospitals NHS Trust | RW6 | Mock hospital outpatient (PCA) |
+| Manchester University NHS FT | R0A | Mock e-RS referral (PCA) |
+| University Hospitals of Derby and Burton NHS FT | RTG | Mock ophthalmology outpatient (PCA) |
+| Chesterfield Royal Hospital NHS FT | — | Mock ophthalmology follow-up (PCA) |
+| Derbyshire Community Health Services NHS FT | RTG | Emergency dental provider (BaRS), health visiting (not currently possible), sexual health PHR (not currently possible) |
+| Derbyshire Health United | DHU | NHS 111 provider for Derbyshire (BaRS booking sender) |
+| Heywood Vaccination Centre | — | Mock vaccination site (NBS hypothetical) |
+| Boots Pharmacy, Rochdale | FLJ64 | Mock pharmacy vaccination site (NBS hypothetical) |
+
+## Applicability to other ICB areas
+
+The **national APIs** (GP Connect, PCA, BaRS, NBS) work the same way across England — the data sources table and integration patterns described here apply nationally.
+
+The **out-of-scope analysis** is Derbyshire-specific and may differ in other ICB areas:
+
+- **CUES** — commissioned by individual ICBs; coverage, participating practices and triage pathways vary by area
+- **Community health trusts** — each ICB area has different community trust arrangements (some areas have combined acute/community trusts, some have standalone community trusts, some have integrated care organisations)
+- **Emergency dental** — commissioned locally; the specific provider (DCHS in Derbyshire) and locations will differ
+- **Sexual health** — the PHR (myphr.online) system is used across multiple areas but not universally; some areas use different platforms
+- **Pharmacy** — the four NHS-assured IT systems and Pharmacy First pathways are national, but local commissioning of enhanced services varies
+
+Before applying this analysis to another ICB area, validate the local provider landscape, commissioned pathways, and community trust configurations with that ICB's digital team.
