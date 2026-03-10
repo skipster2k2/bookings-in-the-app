@@ -1,6 +1,6 @@
 # NHS Unified Appointments Prototype — Derby and Derbyshire ICB
 
-A prototype showing patient appointments from four NHS APIs in a single unified view, researched and scoped for the **NHS Derby and Derbyshire Integrated Care Board (ICB)** area. While the national APIs (GP Connect, PCA, BaRS) work the same way across England, the out-of-scope analysis, local providers, mock data, and gap assessment are specific to Derbyshire's health and care landscape.
+A [prototype showing patient appointments](https://bookings-in-the-app.netlify.app/) from four NHS APIs in a single unified view, researched and scoped for the **NHS Derby and Derbyshire Integrated Care Board (ICB)** area. While the national APIs (GP Connect, PCA, BaRS) work the same way across England, the out-of-scope analysis, local providers, mock data, and gap assessment are specific to Derbyshire's health and care landscape.
 
 The APIs used are: **GP Connect** (primary care, FHIR STU3), the **Patient Care Aggregator** (secondary care + e-RS, FHIR R4), the **Vaccinations National Booking Service** (hypothetical FHIR R4 API), and **BaRS urgent dental** (FHIR R4, booked via NHS 111).
 
