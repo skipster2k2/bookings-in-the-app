@@ -77,11 +77,15 @@ Then drag the `dist/` folder to [app.netlify.com/drop](https://app.netlify.com/d
 
 | Tag           | API                                    | FHIR version | Status           | What it covers                                    |
 |---------------|----------------------------------------|--------------|------------------|---------------------------------------------------|
-| GP            | GP Connect (Patient Facing)            | STU3         | Live (draft spec)| GP consultations, nurse, telephone                |
+| GP            | GP Connect (Patient Facing)            | STU3         | Live (draft spec, limited consumers) | GP consultations, nurse, telephone |
 | Hospital      | Patient Care Aggregator                | R4           | Live             | Outpatient bookings via PEP portals               |
 | e-RS          | Patient Care Aggregator                | R4           | Live             | Referrals from e-Referral Service                 |
 | Vaccination   | Vaccinations National Booking Service  | R4           | **Hypothetical** | COVID-19, flu, RSV vaccination bookings            |
 | Urgent Dental | Booking and Referral Standard (BaRS)   | R4           | Live             | Emergency dental booked via NHS 111                |
+
+### Note on GP Connect Patient Facing status
+
+The GP Connect *Appointment Management* API (clinician-facing, used by NHS 111, extended access hubs, and practice staff) is live and in production at v1.2.7. However, the *Patient Facing* Appointment Management API — which is the one used by the NHS App and represented in this prototype — has its specification still marked as **draft** on Simplifier. The Patient Facing APIs are currently only available for New Market Entrant GP system suppliers as data providers, with the NHS App as the sole consumer. As of July 2025, NHS England is not onboarding any additional consumer suppliers. This position will be reviewed once all providers are compliant. Additionally, new supplier development for the clinician-facing GP Connect Appointment Management has been paused, with responsibility handed to the Referrals and Appointments Team.
 
 ### Why is the NBS API hypothetical?
 
